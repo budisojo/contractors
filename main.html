@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Главная страница</title>
+  <style>
+    /* Палитра красно-белых пастельных тонов */
+    :root {
+      --red-pastel: #f28b82; /* пастельный красный */
+      --red-pastel-light: #f9dcdc;
+      --white: #fff;
+      --gray-light: #f5f5f5;
+      --text-dark: #3a3a3a;
+      --footer-bg: #f7f1f1;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--red-pastel-light);
+      color: var(--text-dark);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      background-color: var(--red-pastel);
+      padding: 15px 30px;
+      display: flex;
+      align-items: center;
+      gap: 25px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      user-select: none;
+    }
+
+    header h1 {
+      margin: 0;
+      flex-grow: 1;
+      font-weight: 700;
+      font-size: 1.4rem;
+      color: var(--white);
+    }
+    
+    nav a {
+      color: var(--white);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      padding: 6px 12px;
+      border-radius: 6px;
+      transition: background-color 0.3s;
+    }
+    nav a:hover,
+    nav a:focus {
+      background-color: var(--red-pastel-light);
+      color: var(--red-pastel);
+      outline: none;
+      cursor: pointer;
+    }
+
+    main {
+      flex-grow: 1;
+      padding: 40px 30px;
+      background-color: var(--white);
+      max-width: 900px;
+      margin: 30px auto;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgb(242 139 130 / 0.3);
+      text-align: center;
+      font-size: 1.2rem;
+    }
+
+    footer {
+      background-color: var(--footer-bg);
+      padding: 15px 30px;
+      text-align: center;
+      font-size: 0.9rem;
+      color: var(--text-dark);
+      border-top: 1px solid #e0d7d7;
+      user-select: none;
+    }
+
+    @media (max-width: 600px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+
+      main {
+        margin: 20px 15px;
+        padding: 25px 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Beta</h1>
+    <nav>
+      <a href="index.html" title="Перейти к подрядчикам">Подрядчики</a>
+      <a href="input-contractors.html" title="Добавить нового подрядчика">Добавить подрядчика</a>
+    </nav>
+  </header>
+
+  <main>
+    <p>Текст Текст Текст Текст Текст Текст Текст Текст Текст Текст Текст Текст Текст Текст .</p>
+    <p>Текст Текст Текст Текст Текст Текст Текст Текст Текст Текст Текст Текст Текст Текст .</p>
+  </main>
+
+  <footer>
+    Создано отделом маркетинга
+  </footer>
+
+</body>
+</html>
