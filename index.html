@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Реестр подрядчиков</title>
+  <style>
+    /* Палитра красно-белых пастельных тонов - стиль main.html */
+    :root {
+      --red-pastel: #f28b82;
+      --red-pastel-light: #f9dcdc;
+      --white: #fff;
+      --gray-light: #f5f5f5;
+      --text-dark: #3a3a3a;
+      --footer-bg: #f7f1f1;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--red-pastel-light);
+      color: var(--text-dark);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      background-color: var(--red-pastel);
+      padding: 15px 30px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      user-select: none;
+      flex-wrap: wrap;
+    }
+
+    header h1 {
+      margin: 0;
+      flex-grow: 1;
+      font-weight: 700;
+      font-size: 1.4rem;
+      color: var(--white);
+      min-width: 180px;
+    }
+    
+    nav a, #home-button {
+      color: var(--white);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      padding: 6px 14px;
+      border-radius: 6px;
+      background: transparent;
+      transition: background-color 0.3s;
+      cursor: pointer;
+      user-select: none;
+      border: none;
+      font-family: inherit;
+      line-height: 1.2;
+    }
+    nav a:hover, nav a:focus, #home-button:hover, #home-button:focus {
+      background-color: var(--red-pastel-light);
+      color: var(--red-pastel);
+      outline: none;
+    }
+
+    main {
+      flex-grow: 1;
+      padding: 40px 30px;
+      background-color: var(--white);
+      max-width: 900px;
+      margin: 30px auto 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgb(242 139 130 / 0.3);
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    label, select, input[type=search], button {
+      font-size: 16px;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    input[type=search] {
+      width: 260px;
+      padding: 6px 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    select {
+      width: 280px;
+      padding: 6px 8px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      appearance: none;
+      background: white url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%204%205'%3E%3Cpath%20fill='none'%20stroke='%233a3a3a'%20stroke-width='1.5'%20d='M2%200L0%202h4L2%200zm0%205L0%203h4l-2%202z'/%3E%3C/svg%3E") no-repeat right 8px top 50%;
+      background-size: 10px 12px;
+      cursor: pointer;
+    }
+
+    button#save-btn {
+      width: 160px;
+      padding: 8px 12px;
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: 8px;
+      border: none;
+      background-color: var(--red-pastel);
+      color: var(--white);
+      box-shadow: 0 3px 6px rgb(242 139 130 / 0.5);
+      cursor: pointer;
+      transition: background-color 0.25s;
+      align-self: flex-start;
+    }
+    button#save-btn:hover, button#save-btn:focus {
+      background-color: #e46666;
+      outline: none;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      vertical-align: top;
+      text-align: left;
+    }
+
+    th {
+      background-color: var(--red-pastel-light);
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    #loading {
+      color: #555;
+      font-style: italic;
+      margin-top: 10px;
+    }
+
+    #error {
+      color: red;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    footer {
+      background-color: var(--footer-bg);
+      padding: 15px 30px;
+      text-align: center;
+      font-size: 0.9rem;
+      color: var(--text-dark);
+      border-top: 1px solid #e0d7d7;
+      user-select: none;
+    }
+
+    @media (max-width: 600px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+
+      main {
+        margin: 20px 15px;
+        padding: 25px 15px;
+      }
+
+      select, input[type=search] {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Реестр подрядчиков</h1>
+    <nav>
+      <button id="home-button" aria-label="Вернуться на главную">Главная</button>
+      <a href="input-contractors.html">Добавить подрядчика</a>
+    </nav>
+  </header>
+
+  <main>
+    <label for="city-search">Поиск города:</label>
+    <input type="search" id="city-search" placeholder="Начните вводить город..." autocomplete="off" aria-label="Поиск города" />
+
+    <label for="city-select">Выберите город:</label>
+    <select id="city-select" size="6" aria-label="Список городов" disabled></select>
+
+    <label for="category-select">Выберите категорию подрядчика:</label>
+    <select id="category-select" aria-label="Список категорий" disabled>
+      <option value="">-- Сначала выберите город --</option>
+    </select>
+
+    <div id="loading">Загрузка данных...</div>
+    <div id="error" class="hidden" role="alert"></div>
+
+    <div id="contractors-table-container" class="hidden" aria-live="polite" aria-relevant="all">
+      <h2>Контакты подрядчиков</h2>
+      <table id="contractors-table" aria-label="Таблица с контактами подрядчиков">
+        <thead>
+          <tr>
+            <th>Комментарий</th>
+            <th>Наименование</th>
+            <th>Сайт</th>
+            <th>Имя</th>
+            <th>Почта</th>
+            <th>Номера</th>
+            <th>Номера 2</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </main>
+
+  <footer>
+    Создано отделом маркетинга
+  </footer>
+
+<script>
+  const JSON_URL = 'nocontractors.json'; // Файл в той же папке
+
+  const citySearchInput = document.getElementById('city-search');
+  const citySelect = document.getElementById('city-select');
+  const categorySelect = document.getElementById('category-select');
+  const loadingDiv = document.getElementById('loading');
+  const errorDiv = document.getElementById('error');
+  const tableContainer = document.getElementById('contractors-table-container');
+  const tableBody = document.querySelector('#contractors-table tbody');
+  const homeBtn = document.getElementById('home-button');
+
+  let data = null;
+  let filteredCitiesOptions = [];
+  let currentCategory = null; // Для хранения выбранной категории
+
+  async function loadData() {
+    try {
+      const resp = await fetch(JSON_URL);
+      if (!resp.ok) throw new Error(`Ошибка загрузки: ${resp.status} ${resp.statusText}`);
+      data = await resp.json();
+
+      loadingDiv.style.display = 'none';
+      errorDiv.classList.add('hidden');
+      citySelect.disabled = false;
+
+      initCities();
+    } catch (err) {
+      loadingDiv.style.display = 'none';
+      errorDiv.textContent = 'Ошибка загрузки данных: ' + err.message;
+      errorDiv.classList.remove('hidden');
+      citySelect.disabled = true;
+      categorySelect.disabled = true;
+    }
+  }
+
+  function initCities() {
+    citySelect.innerHTML = '';
+    if (!data?.города?.length) {
+      errorDiv.textContent = 'Данные по городам отсутствуют.';
+      errorDiv.classList.remove('hidden');
+      citySelect.disabled = true;
+      categorySelect.disabled = true;
+      return;
+    }
+    data.города.forEach(city => {
+      const opt = document.createElement('option');
+      opt.value = city.название;
+      opt.textContent = city.название;
+      citySelect.appendChild(opt);
+    });
+    filteredCitiesOptions = Array.from(citySelect.options);
+    citySelect.selectedIndex = 0;
+    citySelect.dispatchEvent(new Event('change'));
+  }
+
+  citySearchInput.addEventListener('input', () => {
+    const term = citySearchInput.value.trim().toLowerCase();
+    filteredCitiesOptions = [];
+    Array.from(citySelect.options).forEach(opt => {
+      if (opt.value.toLowerCase().includes(term)) {
+        opt.style.display = 'block';
+        filteredCitiesOptions.push(opt);
+      } else {
+        opt.style.display = 'none';
+      }
+    });
+    if(filteredCitiesOptions.length){
+      filteredCitiesOptions[0].selected = true;
+      citySelect.dispatchEvent(new Event('change'));
+    } else {
+      categorySelect.innerHTML = '<option value="">-- Сначала выберите город --</option>';
+      categorySelect.disabled = true;
+      clearTable();
+      tableContainer.classList.add('hidden');
+    }
+  });
+
+  citySelect.addEventListener('change', () => {
+    clearTable();
+    tableContainer.classList.add('hidden');
+    const cityName = citySelect.value;
+    if(!cityName){
+      categorySelect.innerHTML = '<option value="">-- Сначала выберите город --</option>';
+      categorySelect.disabled = true;
+      currentCategory = null;
+      return;
+    }
+    const cityObj = data.города.find(c => c.название === cityName);
+    if(!cityObj || !cityObj.категории?.length){
+      categorySelect.innerHTML = '<option value="">Данные по выбранному городу отсутствуют</option>';
+      categorySelect.disabled = true;
+      currentCategory = null;
+      return;
+    }
+    categorySelect.disabled = false;
+
+    // Сохраним предыдущий выбранный category если есть в новом городе
+    categorySelect.innerHTML = '<option value="">-- Выберите категорию --</option>';
+    cityObj.категории.forEach(cat => {
+      const opt = document.createElement('option');
+      opt.value = cat.название;
+      opt.textContent = cat.название;
+      categorySelect.appendChild(opt);
+    });
+
+    // Если currentCategory есть в новых категориях - выберем ее
+    const availableCategories = cityObj.категории.map(c => c.название);
+    if(currentCategory && availableCategories.includes(currentCategory)){
+      categorySelect.value = currentCategory;
+      categorySelect.dispatchEvent(new Event('change'));
+    } else {
+      currentCategory = null;
+      categorySelect.value = "";
+    }
+  });
+
+  categorySelect.addEventListener('change', () => {
+    clearTable();
+    const cityName = citySelect.value;
+    const categoryName = categorySelect.value;
+    if(!cityName || !categoryName){
+      tableContainer.classList.add('hidden');
+      currentCategory = null;
+      return;
+    }
+    currentCategory = categoryName;
+
+    const cityObj = data.города.find(c => c.название === cityName);
+    if(!cityObj) {
+      tableContainer.classList.add('hidden');
+      return;
+    }
+    const catObj = cityObj.категории.find(cat => cat.название === categoryName);
+    if(!catObj || !Array.isArray(catObj.подрядчики)){
+      tableContainer.classList.add('hidden');
+      return;
+    }
+    renderContractors(catObj.подрядчики);
+  });
+
+  function clearTable(){
+    tableBody.innerHTML = '';
+  }
+
+  function renderContractors(contractors){
+    clearTable();
+    if(contractors.length === 0){
+      tableBody.innerHTML = `<tr><td colspan="7">Данные не найдены</td></tr>`;
+      tableContainer.classList.remove('hidden');
+      return;
+    }
+    contractors.forEach(item => {
+      const tr = document.createElement('tr');
+      ['Комментарий', 'Наименование', 'Сайт', 'Имя', 'Почта', 'Номера', 'Номера 2'].forEach(field => {
+        const td = document.createElement('td');
+        const val = item[field]?.trim() || '';
+        if(field === 'Сайт' && val){
+          const sites = val.split(',').map(s => s.trim());
+          td.innerHTML = sites.map(site=>{
+            const href = site.match(/^https?:\/\//i) ? site : 'http://' + site;
+            return `<a href="${href}" target="_blank" rel="noopener noreferrer">${site}</a>`;
+          }).join(', ');
+        } else if(field === 'Почта' && val){
+          const mails = val.split(',').map(m => m.trim());
+          td.innerHTML = mails.map(mail => `<a href="mailto:${mail}">${mail}</a>`).join(', ');
+        } else {
+          td.textContent = val;
+        }
+        tr.appendChild(td);
+      });
+      tableBody.appendChild(tr);
+    });
+    tableContainer.classList.remove('hidden');
+  }
+
+  homeBtn.addEventListener('click', () => {
+    window.location.href = 'main.html'; // Путь к главной странице
+  });
+
+  window.addEventListener('load', loadData);
+</script>
+
+</body>
+</html>
